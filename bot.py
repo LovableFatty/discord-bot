@@ -1,9 +1,10 @@
+import asyncio
 import os
-import discord
+import discord 
 from dotenv import load_dotenv
 from discord.ext import commands
-from commands import balances, quests
-from database import init_db
+from commands.balances import BalanceCommands
+from commands.quests import QuestCommands
 
 # Load environment variables
 load_dotenv()
@@ -11,16 +12,9 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 USER_ID = int(os.getenv('USER_ID'))
 
 # Set up the bot
-intents = discord.Intents.default()
+intents = discord.Intents.default() 
 intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents)
-
-# Initialize the database
-init_db()
-
-# Load commands
-bot.add_cog(balances.BalanceCommands(bot, USER_ID))
-bot.add_cog(quests.QuestCommands(bot, USER_ID))
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Event: Bot ready
 @bot.event
@@ -29,5 +23,15 @@ async def on_ready():
     for guild in bot.guilds:
         print(f'Guild Name: {guild.name}')
 
+# Main function to set up and run the bot
+async def main():
+    # Add cogs (commands modules)
+    await bot.add_cog(BalanceCommands(bot, USER_ID))
+    await bot.add_cog(QuestCommands(bot, USER_ID))
+
+    # Start the bot
+    await bot.start(TOKEN)
+
 # Run the bot
-bot.run(TOKEN)
+if __name__ == "__main__":
+    asyncio.run(main())
