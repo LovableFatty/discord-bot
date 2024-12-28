@@ -31,6 +31,8 @@ A Discord bot for managing quests and a virtual currency system, **AI-Noah-Bucks
    pip install -r requirements.txt
    ```
 3. Set up .env
+   update .sample-env and rename to .env
+   fill in the missing vars
 4. Run the bot
    ```bash
    python bot.py
